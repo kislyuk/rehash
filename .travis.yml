@@ -6,10 +6,6 @@ python:
   - 3.5
   - 3.6
 
-dist:
-  - precise
-  - trusty
-
 before_install:
   - pip install --quiet codecov wheel
 
