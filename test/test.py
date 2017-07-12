@@ -3,13 +3,16 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import os, sys, unittest, tempfile, json, logging, pickle, hashlib
+import os, sys, unittest, tempfile, json, logging, pickle, hashlib, ssl
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) # noqa
 
 import rehash
 
 class TestResumableHasher(unittest.TestCase):
+    def setUpClass(self):
+        print("OpenSSL version:", ssl.OPENSSL_VERSION)
+
     def setUp(self):
         logging.basicConfig(level="DEBUG")
 
