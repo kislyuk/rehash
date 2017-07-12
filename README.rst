@@ -2,9 +2,9 @@ Rehash: Resumable Hashlib
 =========================
 
 Rehash is a resumable interface to the OpenSSL-based hashers in the
-CPython ``hashlib`` standard library. **Rehash** provides hashers that
+CPython ``hashlib`` standard library. Rehash provides hashers that
 can be pickled, reconstituted from their ``repr()``, and otherwise
-serialized. The rest of the **Rehash** API is identical to
+serialized. The rest of the Rehash API is identical to
 ``hashlib``.
 
 Rehash hashers can be used to checkpoint and restore progress
