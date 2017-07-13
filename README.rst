@@ -35,6 +35,13 @@ Installation
 
   PyPy uses its own hasher implementations. Those are not serializable using rehash.
 
+.. admonition:: Security note
+
+  By default, rehash objects present themselves with a ``repr()`` that exposes their internal state. This allows one to
+  resume the hashing from the point where it stopped. If exposed through an untrusted channel under specific conditions,
+  this could potentially allow an attacker to use an extension attack. If you are unsure about the implications of this,
+  set ``rehash.opaque_repr = True`` after importing rehash.
+
 Links
 -----
 * `Project home page (GitHub) <https://github.com/kislyuk/rehash>`_

@@ -1,9 +1,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import os, sys, hashlib
+import os, sys, hashlib, base64, zlib
 from ctypes import cast, c_void_p, POINTER, Structure, c_int, c_ulong, c_char, c_size_t, c_ssize_t, py_object, memmove
 from ssl import OPENSSL_VERSION
 from sys import version_info as python_version
+
+opaque_repr = False
 
 PyObject_HEAD = [
     ('ob_refcnt', c_size_t),
@@ -58,7 +60,14 @@ class EVPobject(Structure):
 class ResumableHasher(object):
     name = None
 
-    def __init__(self, name=None, data=None):
+    def __init__(self, name=None, data=None, state=None):
+        if state is not None:
+            if not self.name:
+                raise Exception('Parameter "name" is required')
+            self.__setstate__(state=dict(name=name, md_data=zlib.decompress(base64.b64decode(state))))
+            if data is not None:
+                self.update(data)
+            return
         if self.name is not None:
             data = name
         else:
@@ -102,6 +111,13 @@ class ResumableHasher(object):
 
     def __getattr__(self, a):
         return getattr(self._hasher, a)
+
+    def __repr__(self):
+        if opaque_repr:
+            return "{}.{}()".format(self.__module__, self.__class__.__name__)
+        else:
+            md_data = base64.b64encode(zlib.compress(self.__getstate__()["md_data"])).decode()
+            return "{}.{}(name='{}', state='{}')".format(self.__module__, self.__class__.__name__, self.name, md_data)
 
 def _initialize():
     module = sys.modules[__name__]
