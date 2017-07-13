@@ -30,6 +30,8 @@ class TestResumableHasher(unittest.TestCase):
                     rehash.ResumableHasher(algorithm.lower())
             else:
                 print(algorithm)
+                self.assert_resumable(rehash.new(algorithm.lower()))
+                self.assert_resumable(rehash.new(algorithm.lower(), b"initial_data"))
                 self.assert_resumable(rehash.ResumableHasher(algorithm.lower()))
                 self.assert_resumable(rehash.ResumableHasher(algorithm.lower(), b"initial_data"))
                 self.assert_resumable(getattr(rehash, algorithm)())
