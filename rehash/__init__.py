@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os, sys, hashlib
 from ctypes import cast, c_void_p, POINTER, Structure, c_int, c_ulong, c_char, c_size_t, c_ssize_t, py_object, memmove
 from ssl import OPENSSL_VERSION
+from sys import version_info as python_version
 
 PyObject_HEAD = [
     ('ob_refcnt', c_size_t),
@@ -45,10 +46,13 @@ class EVP_MD_CTX(Structure):
         ('md_data', POINTER(c_char)),
     ]
 
-class EVPWrapper(Structure):
+# Python 3.5+: https://github.com/python/cpython/blob/master/Modules/_hashopenssl.c#L52-L59
+# Python 3 - 3.4: https://github.com/python/cpython/blob/3.4/Modules/_hashopenssl.c#L39-L46
+# Python 2.7.13+: https://github.com/python/cpython/blob/2.7/Modules/_hashopenssl.c#L71-L78
+class EVPobject(Structure):
     _fields_ = PyObject_HEAD + [
         ("name", POINTER(py_object)),
-        ("ctx", POINTER(EVP_MD_CTX))
+        ("ctx", EVP_MD_CTX if (3, 0) < python_version < (3, 5) or python_version < (2, 7, 13) else POINTER(EVP_MD_CTX))
     ]
 
 class ResumableHasher(object):
@@ -75,8 +79,11 @@ class ResumableHasher(object):
             return hashlib.new(name)
 
     def _get_evp_md_ctx(self):
-        c_evp_obj = cast(c_void_p(id(self._hasher)), POINTER(EVPWrapper))
-        return c_evp_obj.contents.ctx.contents
+        c_evp_obj = cast(c_void_p(id(self._hasher)), POINTER(EVPobject))
+        if hasattr(c_evp_obj.contents.ctx, "contents"):
+            return c_evp_obj.contents.ctx.contents
+        else:
+            return c_evp_obj.contents.ctx
 
     def __getstate__(self):
         ctx = self._get_evp_md_ctx()
