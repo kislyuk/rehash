@@ -8,7 +8,9 @@ and otherwise serialized. The rest of the Rehash API is identical to
 ``hashlib``.
 
 Rehash hashers can be used to checkpoint and restore progress
-when hashing large byte streams::
+when hashing large byte streams:
+
+.. code-block:: python
 
   import pickle, rehash
   hasher = rehash.sha256(b"foo")
@@ -18,6 +20,12 @@ when hashing large byte streams::
   hasher2.update(b"bar")
 
   assert hasher2.hexdigest() == rehash.sha256(b"foobar").hexdigest()
+
+Installation
+------------
+::
+
+    pip install rehash
 
 .. admonition:: Non-openssl hashers
 
