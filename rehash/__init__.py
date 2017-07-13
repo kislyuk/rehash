@@ -63,6 +63,8 @@ class ResumableHasher(object):
             data = name
         else:
             self.name = name
+        if not self.name:
+            raise Exception('Parameter "name" is required')
         hasher_args = [] if data is None else [data]
         self._hasher = self._get_hashlib_hasher(self.name)(*hasher_args)
 
@@ -103,6 +105,7 @@ class ResumableHasher(object):
 
 def _initialize():
     module = sys.modules[__name__]
+    module.new = ResumableHasher
     for name in hashlib.algorithms_guaranteed:
         if name.startswith("blake2"):
             continue
