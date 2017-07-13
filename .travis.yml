@@ -6,6 +6,24 @@ python:
   - 3.5
   - 3.6
 
+matrix:
+  include:
+    - language: generic
+      python: 2.7
+      os: osx
+    - language: generic
+      python: 3.3
+      os: osx
+    - language: generic
+      python: 3.4
+      os: osx
+    - language: generic
+      python: 3.5
+      os: osx
+    - language: generic
+      python: 3.6
+      os: osx
+
 before_install:
   - pip install --quiet codecov wheel
 
