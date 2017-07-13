@@ -9,10 +9,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import rehash
 
-class TestResumableHasher(unittest.TestCase):
-    def setUpClass(self):
-        print("OpenSSL version:", ssl.OPENSSL_VERSION)
+print("OpenSSL version:", ssl.OPENSSL_VERSION)
 
+class TestResumableHasher(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(level="DEBUG")
 
