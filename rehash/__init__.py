@@ -107,7 +107,7 @@ def _initialize():
     module = sys.modules[__name__]
     module.new = ResumableHasher
     for name in hashlib.algorithms_guaranteed:
-        if name.startswith("blake2"):
+        if name.startswith("blake2") or name.startswith("sha3") or name.startswith("shake"):
             continue
         setattr(module, name, type(name, (ResumableHasher,), dict(name=name)))
 
