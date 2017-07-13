@@ -6,6 +6,9 @@ python:
   - 3.5
   - 3.6
 
+dist: trusty
+sudo: false
+
 matrix:
   include:
     - language: generic
@@ -35,5 +38,3 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-sudo: false
