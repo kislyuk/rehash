@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rehash',
-    version='0.1.0',
+    version='0.2.0',
     url='https://github.com/kislyuk/rehash',
     license='Apache Software License',
     author='Andrey Kislyuk',
