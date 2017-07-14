@@ -66,7 +66,7 @@ class ResumableHasher(object):
             return "{}.{}()".format(self.__module__, self.__class__.__name__)
         else:
             md_data = base64.b64encode(zlib.compress(self.__getstate__()["md_data"])).decode()
-            return "{}.{}(name='{}', state='{}')".format(self.__module__, self.__class__.__name__, self.name, md_data)
+            return "{}.{}(state='{}')".format(self.__module__, self.name, md_data)
 
 
 new = ResumableHasher
