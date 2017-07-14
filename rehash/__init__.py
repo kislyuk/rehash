@@ -68,9 +68,11 @@ class ResumableHasher(object):
             md_data = base64.b64encode(zlib.compress(self.__getstate__()["md_data"])).decode()
             return "{}.{}(name='{}', state='{}')".format(self.__module__, self.__class__.__name__, self.name, md_data)
 
+
+new = ResumableHasher
+
 def _initialize():
     module = sys.modules[__name__]
-    module.new = ResumableHasher
     for name in hashlib.algorithms_guaranteed:
         if name.startswith("blake2") or name.startswith("sha3") or name.startswith("shake"):
             continue
