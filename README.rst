@@ -27,6 +27,12 @@ Installation
 
     pip install rehash
 
+Applications
+~~~~~~~~~~~~
+Rehash is useful in any situation when your VM is short-lived or preemptable, and the object you're hashing is huge. For
+example, Rehash can be used to hand off the hashing state of large objects between AWS Lambda functions or Google Cloud
+Functions, which have runtime limits of 5 and 9 minutes, respectively (TODO: example).
+
 .. admonition:: Non-openssl hashers
 
   ``sha3`` and ``blake2`` hash algorithms in Python 3.6 are not OpenSSL-based and not supported by rehash.
