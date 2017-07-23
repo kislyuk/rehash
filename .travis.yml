@@ -6,7 +6,6 @@ python:
   - 3.5
   - 3.6
   - nightly
-  - pypy-5.7.1
 
 dist: trusty
 sudo: false
