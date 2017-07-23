@@ -37,6 +37,17 @@ class TestResumableHasher(unittest.TestCase):
                 self.assert_resumable(getattr(rehash, algorithm)())
                 self.assert_resumable(getattr(rehash, algorithm)(b"initial_data"))
 
+    def test_repr(self):
+        self.assertEqual(
+            repr(rehash.sha256()),
+            "rehash.sha256(state='eJxLf8aZ1boufXfR5zwbq6/+S+uD+AJ7Mlhnr77ZLC959kE0AxWBAhDbqG8rn3by+04AVxIUEg==')"
+        )
+        rehash.opaque_repr = True
+        self.assertEqual(
+            repr(rehash.sha256()),
+            "rehash.sha256()"
+        )
+
     def test_doc_example(self):
         import pickle, rehash
         hasher = rehash.sha256(b"foo")
