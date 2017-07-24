@@ -38,9 +38,10 @@ class TestResumableHasher(unittest.TestCase):
                 self.assert_resumable(getattr(rehash, algorithm)(b"initial_data"))
 
     def test_repr(self):
+        # Some of the memory at the tail of the hasher state is uninitialized at initial state
         self.assertEqual(
-            repr(rehash.sha256()),
-            "rehash.sha256(state='eJxLf8aZ1boufXfR5zwbq6/+S+uD+AJ7Mlhnr77ZLC959kE0AxWBAhDbqG8rn3by+04AVxIUEg==')"
+            repr(rehash.sha256())[:64],
+            "rehash.sha256(state='eJxLf8aZ1boufXfR5zwbq6/+S+uD+AJ7Mlhnr77ZLC959kE0AxWBAhDfa7Ku5N63OAIAWHETSw==')"[:64]
         )
         rehash.opaque_repr = True
         self.assertEqual(
