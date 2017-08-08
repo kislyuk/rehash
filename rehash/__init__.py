@@ -73,6 +73,8 @@ new = ResumableHasher
 
 def _initialize():
     module = sys.modules[__name__]
+    if not hasattr(hashlib, 'algorithms_guaranteed'):
+        setattr(hashlib, 'algorithms_guaranteed', hashlib.algorithms)
     for name in hashlib.algorithms_guaranteed:
         if name.startswith("blake2") or name.startswith("sha3") or name.startswith("shake"):
             continue
