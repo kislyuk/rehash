@@ -1,3 +1,13 @@
+Changes for v0.3.0 (2017-08-08)
+===============================
+
+-  Support Python >= 2.7, < 2.7.9, which does not have
+   hashlib.algorithms\_guaranteed
+
+-  Don't expose unsupported hashers
+
+-  Documentation improvements
+
 Changes for v0.2.1 (2017-07-13)
 ===============================
 
