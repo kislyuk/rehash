@@ -8,6 +8,9 @@ opaque_repr = False
 
 class ResumableHasher(object):
     name = None
+    _algorithms_guaranteed = getattr(hashlib,
+                                     "algorithms_guaranteed",
+                                     ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"])
 
     def __init__(self, name=None, data=None, state=None):
         if state is not None:
@@ -33,7 +36,7 @@ class ResumableHasher(object):
             raise Exception("sha3 algorithms are not supported by rehash")
         if name.startswith("shake"):
             raise Exception("shake algorithms are not supported by rehash")
-        if name in hashlib.algorithms_guaranteed:
+        if name in self._algorithms_guaranteed:
             return getattr(hashlib, name)
         else:
             return hashlib.new(name)
@@ -73,9 +76,7 @@ new = ResumableHasher
 
 def _initialize():
     module = sys.modules[__name__]
-    if not hasattr(hashlib, 'algorithms_guaranteed'):
-        setattr(hashlib, 'algorithms_guaranteed', hashlib.algorithms)
-    for name in hashlib.algorithms_guaranteed:
+    for name in ResumableHasher._algorithms_guaranteed:
         if name.startswith("blake2") or name.startswith("sha3") or name.startswith("shake"):
             continue
         setattr(module, name, type(name, (ResumableHasher,), dict(name=name)))
