@@ -1,3 +1,8 @@
+Changes for v0.3.1 (2017-11-23)
+===============================
+
+Fix EVPobject layout in Python 3.5.0 through 3.5.2
+
 Changes for v0.3.0 (2017-08-08)
 ===============================
 
