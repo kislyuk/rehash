@@ -45,11 +45,13 @@ class EVP_MD_CTX(Structure):
         ('md_data', POINTER(c_char)),
     ]
 
-# Python 3.5.3+: https://github.com/python/cpython/blob/master/Modules/_hashopenssl.c#L52-L59
+# Python 3.8+: https://github.com/python/cpython/blob/master/Modules/_hashopenssl.c#L58-L64
+# Python 3.5.3 - 3.7: https://github.com/python/cpython/blob/3.7/Modules/_hashopenssl.c#L52-L59
 # Python 3 - 3.5.2: https://github.com/python/cpython/blob/3.4/Modules/_hashopenssl.c#L39-L46
 # Python 2.7.13+: https://github.com/python/cpython/blob/2.7/Modules/_hashopenssl.c#L71-L78
 class EVPobject(Structure):
-    _fields_ = PyObject_HEAD + [
-        ("name", POINTER(py_object)),
+    _fields_ = PyObject_HEAD + (
+        [("name", POINTER(py_object))] if PYTHON_VERSION < (3, 8) else []
+    ) + [
         ("ctx", EVP_MD_CTX if (3, 0) < PYTHON_VERSION < (3, 5, 3) or PYTHON_VERSION < (2, 7, 13) else POINTER(EVP_MD_CTX))
     ]
