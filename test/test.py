@@ -59,5 +59,6 @@ class TestResumableHasher(unittest.TestCase):
 
         assert hasher2.hexdigest() == rehash.sha256(b"foobar").hexdigest()
 
+
 if __name__ == '__main__':
     unittest.main()
