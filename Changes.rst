@@ -1,3 +1,12 @@
+Changes for v1.0.0 (2019-10-23)
+===============================
+
+-  Update EVPobject layout for Python 3.8
+
+-  Test and release infrastructure improvements
+
+-  Bump version to 1.0.0 to indicate stable API
+
 Changes for v0.3.1 (2017-11-23)
 ===============================
 
