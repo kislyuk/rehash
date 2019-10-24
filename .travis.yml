@@ -1,21 +1,17 @@
 language: python
+sudo: required
+dist: bionic
 python:
   - 2.7
-  - 3.4
   - 3.5
   - 3.6
-  - nightly
-
-dist: trusty
-sudo: false
+  - 3.7
+  - 3.8
 
 matrix:
   include:
     - language: generic
       python: 2.7
-      os: osx
-    - language: generic
-      python: 3.4
       os: osx
     - language: generic
       python: 3.5
@@ -25,6 +21,9 @@ matrix:
       os: osx
     - language: generic
       python: 3.7
+      os: osx
+    - language: generic
+      python: 3.8
       os: osx
 
 before_install:
