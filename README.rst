@@ -63,8 +63,8 @@ License
 -------
 Licensed under the terms of the `Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>`_.
 
-.. image:: https://travis-ci.org/kislyuk/rehash.png
-        :target: https://travis-ci.org/kislyuk/rehash
+.. image:: https://github.com/kislyuk/rehash/workflows/Python%20package/badge.svg
+        :target: https://github.com/kislyuk/rehash/actions
 .. image:: https://codecov.io/github/kislyuk/rehash/coverage.svg?branch=master
         :target: https://codecov.io/github/kislyuk/rehash?branch=master
 .. image:: https://img.shields.io/pypi/v/rehash.svg
