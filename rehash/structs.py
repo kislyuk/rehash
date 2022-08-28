@@ -9,16 +9,25 @@ PyObject_HEAD = [
     ('ob_type', c_void_p)
 ]
 
+# OpenSSL struct evp_md_st
 # OpenSSL 1.0.2 and earlier:
 # https://github.com/openssl/openssl/blob/OpenSSL_1_0_2-stable/crypto/evp/evp.h#L159-L181
-# OpenSSL 1.1.0 and later:
-# https://github.com/openssl/openssl/blob/master/crypto/include/internal/evp_int.h#L99-L113
+# OpenSSL 1.1.0:
+# https://github.com/openssl/openssl/blob/OpenSSL_1_1_0-stable/crypto/include/internal/evp_int.h#L88-L102
+# OpenSSL 1.1.1 and later:
+# https://github.com/openssl/openssl/blob/master/include/crypto/evp.h#L247-L288
 class EVP_MD(Structure):
     _fields_ = [
         ('type', c_int),
         ('pkey_type', c_int),
         ('md_size', c_int),
-        ('flags', c_ulong),
+        ('flags', c_ulong)
+    ]
+    if OPENSSL_VERSION >= "OpenSSL 3.0.0":
+        _fields_ += [
+            ('origin', c_int),
+        ]
+    _fields_ += [
         ('init', c_void_p),
         ('update', c_void_p),
         ('final', c_void_p),
@@ -35,15 +44,23 @@ class EVP_MD(Structure):
         ('block_size', c_int),
         ('ctx_size', c_int),
     ]
+    print("EVP_MD fields", _fields_)
 
+# OpenSSL struct evp_md_ctx_st
+# OpenSSL 1.1.0 and earlier:
 # https://github.com/openssl/openssl/blob/master/crypto/evp/evp_locl.h#L12-L22
+# OpenSSL 1.1.1 and later, before 3.0.0:
+# https://github.com/openssl/openssl/blob/OpenSSL_1_1_1-stable/crypto/evp/evp_local.h#L12-L22
+# OpenSSL 3.0.0 and later:
+# https://github.com/openssl/openssl/blob/master/crypto/evp/evp_local.h#L16-L34
 class EVP_MD_CTX(Structure):
-    _fields_ = [
+    _fields_ = ([] if OPENSSL_VERSION < "OpenSSL 3.0.0" else [("reqdigest", POINTER(EVP_MD))]) + [
         ('digest', POINTER(EVP_MD)),
         ('engine', c_void_p),
         ('flags', c_ulong),
         ('md_data', POINTER(c_char)),
     ]
+    print("FIELDS:", _fields_)
 
 # Python 3.8+: https://github.com/python/cpython/blob/master/Modules/_hashopenssl.c#L58-L64
 # Python 3.5.3 - 3.7: https://github.com/python/cpython/blob/3.7/Modules/_hashopenssl.c#L52-L59

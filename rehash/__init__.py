@@ -33,8 +33,10 @@ class ResumableHasher(object):
         if name.startswith("blake2"):
             raise Exception("blake2 algorithms are not OpenSSL-based and not supported by rehash")
         if name.startswith("sha3"):
+            # FIXME: sha3 is supported by openssl 1.1.1+ and default in cpython
             raise Exception("sha3 algorithms are not supported by rehash")
         if name.startswith("shake"):
+            # FIXME: shake is supported by openssl 1.1.1+ and default in cpython
             raise Exception("shake algorithms are not supported by rehash")
         if name in self._algorithms_guaranteed:
             return getattr(hashlib, name)
@@ -43,6 +45,7 @@ class ResumableHasher(object):
 
     def _get_evp_md_ctx(self):
         c_evp_obj = cast(c_void_p(id(self._hasher)), POINTER(EVPobject))
+        print(type(c_evp_obj), c_evp_obj)
         if hasattr(c_evp_obj.contents.ctx, "contents"):
             return c_evp_obj.contents.ctx.contents
         else:
@@ -51,6 +54,11 @@ class ResumableHasher(object):
     def __getstate__(self):
         ctx = self._get_evp_md_ctx()
         ctx_size = ctx.digest.contents.ctx_size
+        # FIXME: ctx_size is always 0/never updated? It's a "legacy structure member" (https://github.com/openssl/openssl/blame/master/include/crypto/evp.h#L251)
+        # FIXME: we may need to use ctx.engine "functional reference" if "digest is engine provided"
+
+        print("REQCTX SIZE:", ctx.reqdigest.contents.block_size, ctx.reqdigest.contents.ctx_size)
+        print("CTX SIZE:", ctx.digest.contents.block_size, ctx.digest.contents.ctx_size)
         hasher_state = ctx.md_data[:ctx_size]
         return dict(name=self.name, md_data=hasher_state)
 
