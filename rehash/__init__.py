@@ -1,7 +1,7 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import os, sys, hashlib, base64, zlib
 from ctypes import cast, memmove, POINTER, c_void_p
+from ssl import OPENSSL_VERSION
+
 from .structs import EVPobject
 
 opaque_repr = False
@@ -13,6 +13,11 @@ class ResumableHasher(object):
                                      ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"])
 
     def __init__(self, name=None, data=None, state=None):
+        # Starting with OpenSSL 3.0, the digest algorithm implementations use the "provider" interface described here:
+        # https://www.openssl.org/docs/manmaster/man7/provider-digest.html
+        # Support for serializing digest contexts for these implementations is not yet implemented.
+        if OPENSSL_VERSION >= "OpenSSL 3.0.0":
+            raise NotImplementedError("OpenSSL 3 is not yet supported. Please use OpenSSL 1.x")
         if state is not None:
             if not self.name:
                 raise Exception('Parameter "name" is required')
@@ -33,8 +38,10 @@ class ResumableHasher(object):
         if name.startswith("blake2"):
             raise Exception("blake2 algorithms are not OpenSSL-based and not supported by rehash")
         if name.startswith("sha3"):
+            # FIXME: sha3 is supported by openssl 1.1.1+ and default in cpython
             raise Exception("sha3 algorithms are not supported by rehash")
         if name.startswith("shake"):
+            # FIXME: shake is supported by openssl 1.1.1+ and default in cpython
             raise Exception("shake algorithms are not supported by rehash")
         if name in self._algorithms_guaranteed:
             return getattr(hashlib, name)
