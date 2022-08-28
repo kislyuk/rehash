@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from ssl import OPENSSL_VERSION
 from sys import version_info as PYTHON_VERSION
 from ctypes import c_void_p, POINTER, Structure, c_int, c_ulong, c_char, c_size_t, c_ssize_t, py_object
@@ -54,13 +52,21 @@ class EVP_MD(Structure):
 # OpenSSL 3.0.0 and later:
 # https://github.com/openssl/openssl/blob/master/crypto/evp/evp_local.h#L16-L34
 class EVP_MD_CTX(Structure):
-    _fields_ = ([] if OPENSSL_VERSION < "OpenSSL 3.0.0" else [("reqdigest", POINTER(EVP_MD))]) + [
+    _fields_ = [
         ('digest', POINTER(EVP_MD)),
         ('engine', c_void_p),
         ('flags', c_ulong),
         ('md_data', POINTER(c_char)),
     ]
-    print("FIELDS:", _fields_)
+    if OPENSSL_VERSION >= "OpenSSL 3.0.0":
+        _fields_ = [
+            ('reqdigest', POINTER(EVP_MD)),
+        ] + _fields_ + [
+            ('pctx', c_void_p),
+            ('update', c_void_p),
+            ('algctx', c_void_p),
+            ('fetched_digest', POINTER(EVP_MD)),
+        ]
 
 # Python 3.8+: https://github.com/python/cpython/blob/master/Modules/_hashopenssl.c#L58-L64
 # Python 3.5.3 - 3.7: https://github.com/python/cpython/blob/3.7/Modules/_hashopenssl.c#L52-L59

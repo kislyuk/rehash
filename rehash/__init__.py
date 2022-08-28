@@ -1,7 +1,7 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import os, sys, hashlib, base64, zlib
 from ctypes import cast, memmove, POINTER, c_void_p
+from ssl import OPENSSL_VERSION
+
 from .structs import EVPobject
 
 opaque_repr = False
@@ -13,6 +13,11 @@ class ResumableHasher(object):
                                      ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"])
 
     def __init__(self, name=None, data=None, state=None):
+        # Starting with OpenSSL 3.0, the digest algorithm implementations use the "provider" interface described here:
+        # https://www.openssl.org/docs/manmaster/man7/provider-digest.html
+        # Support for serializing digest contexts for these implementations is not yet implemented.
+        if OPENSSL_VERSION >= "OpenSSL 3.0.0":
+            raise NotImplementedError("OpenSSL 3 is not yet supported. Please use OpenSSL 1.x")
         if state is not None:
             if not self.name:
                 raise Exception('Parameter "name" is required')
@@ -54,11 +59,6 @@ class ResumableHasher(object):
     def __getstate__(self):
         ctx = self._get_evp_md_ctx()
         ctx_size = ctx.digest.contents.ctx_size
-        # FIXME: ctx_size is always 0/never updated? It's a "legacy structure member" (https://github.com/openssl/openssl/blame/master/include/crypto/evp.h#L251)
-        # FIXME: we may need to use ctx.engine "functional reference" if "digest is engine provided"
-
-        print("REQCTX SIZE:", ctx.reqdigest.contents.block_size, ctx.reqdigest.contents.ctx_size)
-        print("CTX SIZE:", ctx.digest.contents.block_size, ctx.digest.contents.ctx_size)
         hasher_state = ctx.md_data[:ctx_size]
         return dict(name=self.name, md_data=hasher_state)
 
