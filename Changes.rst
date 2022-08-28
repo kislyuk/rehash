@@ -1,3 +1,10 @@
+Changes for v1.0.1 (2022-08-28)
+===============================
+
+-  Disclaim support for OpenSSL 3
+
+-  Test and release infrastructure improvements
+
 Changes for v1.0.0 (2019-10-23)
 ===============================
 
